@@ -1,5 +1,6 @@
 //Clase Person
 class Person {
+    
     //Propiedades privadas
    #name;
    #lastname1;
@@ -41,33 +42,33 @@ class Person {
     }
 
     //Setters
-    set name(nombre) {
-        if (!nombre) { //Validación para que el campo no quede vacío
+    set name(name) {
+        if (!name) { //Validación para que el campo no quede vacío
             throw new Error('El campo nombre no puede estar vacío');
         }
-        this.#name = nombre;
+        this.#name = name;
     }
 
-    set lastname1(apellido1) {
-        if (!apellido1) {
+    set lastname1(lastname1) {
+        if (!lastname1) {
             throw new Error('El campo primer apellido no puede estar vacío');
         }
-        this.#lastname1 = apellido1;
+        this.#lastname1 = lastname1;
     }   
 
-    set lastname2(apellido2) {
-        this.#lastname2 = apellido2;
+    set lastname2(lastname2) {
+        this.#lastname2 = lastname2;
     }
 
-    set born(fNacimiento) {
-        if (!fNacimienti) {
+    set born(born) {
+        if (!born) {
             throw new Error('El campo fecha de nacimiento no puede estar vacío');
         }
-        this.#born = fNacimiento;
+        this.#born = born;
     }
 
-    set picture(imagen) {
-        this.#picture = imagen;
+    set picture(picture) {
+        this.#picture = picture;
     }
 
     //Método toString

@@ -1,5 +1,6 @@
 //Clase Category
 class Category {
+    
     //Propiedades privadas
     #name;
     #description;
