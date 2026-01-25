@@ -73,3 +73,5 @@ class Production {
     }
 
 }
+
+export default Production;

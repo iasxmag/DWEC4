@@ -43,3 +43,5 @@ class Resource {
         return `Duración: ${this.#duration}, Enlace: ${this.#link}`;
     }
 }
+
+export default Resource;

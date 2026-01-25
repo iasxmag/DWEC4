@@ -44,3 +44,4 @@ class Movie extends Production {
         
 
 }
+export default Movie;

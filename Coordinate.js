@@ -39,3 +39,5 @@ class Coordinate {
         return `Latitud: (${this.#latitude}, | Longitud: ${this.#longitude})`;
     }
 }
+
+export default Coordinate;

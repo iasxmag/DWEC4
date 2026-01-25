@@ -2,7 +2,8 @@
 import Category from "./Category.js";
 import User from "./User.js";
 import Production from "./Production.js";
-import { act } from "react";
+import Person from "./Person.js";
+
 
 const VideoSystem = (function () {
     let vSys; //Variable para guardar la unica instancia de VideoSystem
@@ -117,11 +118,11 @@ const VideoSystem = (function () {
             if (!user || !(user instanceof User)) {
                 throw new Error("El usuario no puede ser null y debe ser un objeto válido.")
             }
-            const existeUsu = this.users.find(usu => usu.username === user.username);
+            const existeUsu = this.#users.find(usu => usu.username === user.username);
             if (existeUsu) {
                 throw new Error("El usuario ya existe.");
             }
-            const existeEmail = this.users.find(usu => usu.email === user.email);
+            const existeEmail = this.#users.find(usu => usu.email === user.email);
             if (existeEmail) {
                 throw new Error("El email ya está registrado.");
             }  
@@ -223,12 +224,12 @@ const VideoSystem = (function () {
             if (!actor || !(actor instanceof Person)) {
                 throw new Error("El actor no puede ser null y debe ser un objeto válido.")
             }
-            const existeActor = this.#actors.find(act => act.name === actor.name);
-            if (!existeActor) {
+            const index = this.#actors.findIndex(act => act.name === actor.name && act.lastname1 === actor.lastname1);
+            if (index === -1) {
                 throw new Error("El actor no existe en el sistema.");
             }
             //Eliminar las relaciones de actor-producción que involucren a este actor
-            this.#actorProductions = this.#actorProductions.filter(rel => rel.actor.name !== actor.name);
+            this.#actorProductions = this.#actorProductions.filter(rel => rel.actor.name !== actor.name && rel.actor.lastname1 !== actor.lastname1);
             this.#actors.splice(index, 1);
             return this.#actors.length;
         }
@@ -264,12 +265,12 @@ const VideoSystem = (function () {
             if (!director || !(director instanceof Person)) {
                 throw new Error("El director no puede ser null y debe ser un objeto válido.")
             }
-            const existeDirector = this.#directors.find(dir => dir.name === director.name);
-            if (!existeDirector) {
+            const index = this.#directors.findIndex(dir => dir.name === director.name && dir.lastname1 === director.lastname1);
+            if (index === -1) {
                 throw new Error("El director no existe en el sistema.");
             }
             //Eliminar las relaciones de director-producción
-            this.#directorProductions = this.#directorProductions.filter(rel => rel.director.name !== director.name);
+            this.#directorProductions = this.#directorProductions.filter(rel => !(rel.director.name === director.name && rel.director.lastname1 === director.lastname1));
             this.#directors.splice(index, 1);
             return this.#directors.length;
         }
@@ -293,7 +294,7 @@ const VideoSystem = (function () {
             this.addCategory(category); 
             }
             // Crear la relación entre producción y categoría
-            const existeRel = this.#categoryProductions.some(rel => rel.category.name === production.title && rel.category.name === production.title);
+            const existeRel = this.#categoryProductions.some(rel => rel.category.name === category.name && rel.production.title === production.title);
             if (!existeRel) {
                 this.#categoryProductions.push({ production: production, category: category });
             }
@@ -397,14 +398,13 @@ const VideoSystem = (function () {
             if (!production) {
                 throw new Error("Production es null.")
             }
-            const indexDir = this.#directors.findIndex(dir => dir.name === director.name && dir.lastname1 === director.lastname1);
-            const indexProd = this.#productions.findIndex(prod => prod.title === production.title);
-            if (indexDir === -1 || indexProd === -1) {
-                throw new Error("El director o la producción no existen en el sistema.");
-            }
+            this.#directorProductions = this.#directorProductions.filter(rel => !(rel.director.name === director.name && 
+            rel.director.lastname1 === director.lastname1 && 
+            rel.production.title === production.title)
+            );  
 
             return this.#directorProductions.filter(rel => rel.director.name === director.name &&
-                rel.director.lastname1 === director.lastname1).length;
+            rel.director.lastname1 === director.lastname1).length;
         }
             
         deassignActor(actor, production) {
@@ -414,14 +414,13 @@ const VideoSystem = (function () {
             if (!production) {
                 throw new Error("Production es null.")
             }
-            const indexAct = this.#actors.findIndex(act => act.name === actor.name && act.lastname1 === actor.lastname1);
-            const indexProd = this.#productions.findIndex(prod => prod.title === production.title);
-            if (indexAct === -1 || indexProd === -1) {
-                throw new Error("El actor o la producción no existen en el sistema.");
-            }
+            this.#actorProductions = this.#actorProductions.filter(rel => !(rel.actor.name === actor.name && 
+            rel.actor.lastname1 === actor.lastname1 && 
+            rel.production.title === production.title)
+            );
 
             return this.#actorProductions.filter(rel => rel.actor.name === actor.name &&
-                rel.actor.lastname1 === actor.lastname1).length;
+            rel.actor.lastname1 === actor.lastname1).length;
         }
 
         //Metodos cast
@@ -534,3 +533,4 @@ return VideoSystem;
 
 // Exportar la clase VideoSystem para que se pueda usar
 export default VideoSystem;
+

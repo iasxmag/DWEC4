@@ -49,3 +49,5 @@ class Serie extends Production {
 
 
 }
+
+export default Serie;
